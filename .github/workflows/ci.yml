@@ -1,0 +1,53 @@
+name: ci
+
+# Trigger on pushes to all branches and for all pull-requests
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: "${{ matrix.configurations.name }} | ${{ matrix.configurations.cmake-preset }}"
+    runs-on: ${{ matrix.configurations.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        configurations:
+          - name: MacOS 12
+            os: macos-12
+            cmake-preset: macos
+          - name: Ubuntu 22.04
+            os: ubuntu-22.04
+            cmake-preset: linux-clang
+          - name: Ubuntu 22.04
+            os: ubuntu-22.04
+            cmake-preset: linux-gcc
+          - name: Windows 2022
+            os: windows-2022
+            cmake-preset: x64-windows
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Get Ninja
+      uses: urkle/action-get-ninja@v1
+      with:
+        version: 1.11.1
+
+    - name: Set Clang on macOS
+      if: matrix.configurations.os == 'macos-12'
+      shell: bash
+      run: |
+        echo "$(brew --prefix llvm@15)/bin/:$PATH" >> $GITHUB_PATH
+
+    - name: Configure CMake
+      shell: bash
+      run: |
+        cd CppCon2022-Cpp20-Coroutines-for-beginners/
+        cmake --preset ${{ matrix.configurations.cmake-preset }}
+
+    - name: Build
+      shell: bash
+      run: |
+        cd CppCon2022-Cpp20-Coroutines-for-beginners/
+        cmake --build --preset ${{ matrix.configurations.cmake-preset }}
+
+
