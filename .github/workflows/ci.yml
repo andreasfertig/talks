@@ -41,13 +41,20 @@ jobs:
     - name: Configure CMake
       shell: bash
       run: |
-        cd CppCon2022-Cpp20-Coroutines-for-beginners/
-        cmake --preset ${{ matrix.configurations.cmake-preset }}
+        for f in */CMakeLists.txt; do
+          dir=$(dirname $f)
+          cd $dir
+          cmake --preset ${{ matrix.configurations.cmake-preset }}
+          cd ..
+        done
 
     - name: Build
       shell: bash
       run: |
-        cd CppCon2022-Cpp20-Coroutines-for-beginners/
-        cmake --build --preset ${{ matrix.configurations.cmake-preset }}
-
+        for f in */CMakeLists.txt; do
+          dir=$(dirname $f)
+          cd $dir
+          cmake --build --preset ${{ matrix.configurations.cmake-preset }}
+          cd ..
+        done
 

@@ -23,13 +23,13 @@ if(MSVC)
     # enables more conforming C++ in general
     add_definitions(/permissive-)
 
-    
+
 else()
-    
+
 
     if(IS_CLANG)
         add_definitions(-fexperimental-library) # std::format for Clang 15 and 16 at least
-        
+
     else()
     endif()
 endif()
@@ -39,21 +39,9 @@ enable_testing()
 
 
 
-add_executable(suspendNever0 suspendNever0.cpp)
-set_target_properties(suspendNever0 PROPERTIES
-  FOLDER "suspendNever0"
-  CXX_STANDARD 20
-)
-
 add_executable(coroutineTask1 coroutineTask1.cpp)
 set_target_properties(coroutineTask1 PROPERTIES
   FOLDER "coroutineTask1"
-  CXX_STANDARD 20
-)
-
-add_executable(suspendAlways0 suspendAlways0.cpp)
-set_target_properties(suspendAlways0 PROPERTIES
-  FOLDER "suspendAlways0"
   CXX_STANDARD 20
 )
 
