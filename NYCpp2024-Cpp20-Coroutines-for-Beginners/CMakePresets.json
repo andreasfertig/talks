@@ -1,0 +1,94 @@
+{
+    "version": 4,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 23,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "base",
+            "description": "Sets generator, build and install directory",
+            "hidden": true,
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}"
+            }
+        },
+        {
+            "name": "x64-windows",
+            "description": "Sets x64 arch, compilers, build type",
+            "generator": "Visual Studio 17 2022",
+            "inherits": "base",
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            },
+            "toolset": {
+                "value": "host=x64",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "cl"
+            }
+        },
+        {
+            "name": "linux-gcc",
+            "description": "Compile on Linux (g++)",
+            "inherits": "base",
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "g++-12"
+            }
+        },
+        {
+            "name": "linux-clang",
+            "description": "Compile on Linux (Clang)",
+            "inherits": "base",
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_CXX_FLAGS_DEBUG": "-g3"
+            }
+        },
+        {
+            "name": "macos",
+            "generator": "Ninja",
+            "description": "Compile on macOS",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "clang++"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "core-build",
+            "description": "Inherits environment from base configurePreset",
+            "configurePreset": "base",
+            "hidden": true,
+            "inheritConfigureEnvironment": true
+        },
+        {
+            "name": "x64-windows",
+            "configurePreset": "x64-windows",
+            "inherits": "core-build"
+        },
+        {
+            "name": "linux-gcc",
+            "configurePreset": "linux-gcc",
+            "inherits": "core-build"
+        },
+        {
+            "name": "linux-clang",
+            "configurePreset": "linux-clang",
+            "inherits": "core-build"
+        },
+        {
+            "name": "macos",
+            "configurePreset": "macos",
+            "inherits": "core-build"
+        }
+    ]
+}
